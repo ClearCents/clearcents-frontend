@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import './Login.css';
 
 function Login({ onLogin }) {
   const [email, setEmail] = useState('');
@@ -22,7 +23,7 @@ function Login({ onLogin }) {
   };
 
   return (
-    <div>
+    <div className="login-container">
       <h2>Login to ClearCents</h2>
       <input
         type="email"
@@ -39,7 +40,7 @@ function Login({ onLogin }) {
       />
       <br />
       <button onClick={handleLogin}>Login</button>
-      {error && <p>{error}</p>}
+      {error && <p className="error">{error}</p>}
     </div>
   );
 }

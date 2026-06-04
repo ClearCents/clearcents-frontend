@@ -1,0 +1,80 @@
+.dashboard {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.dashboard h2 {
+  font-size: 22px;
+  color: #1a1a2e;
+  margin-bottom: 20px;
+}
+
+.subscription-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  background: #fafafa;
+}
+
+.subscription-card h3 {
+  font-size: 16px;
+  color: #1a1a2e;
+}
+
+.subscription-card p {
+  color: #e63946;
+  font-weight: bold;
+  margin: 0;
+}
+.add-form {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  margin-top: 20px;
+}
+
+.add-form input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 15px;
+  outline: none;
+}
+
+.add-form button {
+  width: 100%;
+  padding: 12px;
+  background: #1a1a2e;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.add-form button:hover {
+  background: #e63946;
+}
+
+.delete-btn {
+  padding: 8px 15px;
+  background: #e63946;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.delete-btn:hover {
+  background: #c1121f;
+}

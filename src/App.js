@@ -5,7 +5,16 @@ import Login from './components/Login';
 
 
 function App() {
-  const [token, setToken] = useState(null);
+  const storedToken = localStorage.getItem('token');
+  const storedExpiry = localStorage.getItem('token_expiry');
+  const isValid = storedExpiry && Date.now() < parseInt(storedExpiry);
+  const [token, setToken] = useState(isValid ? storedToken : null);
+  const handleLogin = (newToken) => {
+  const expiry = Date.now() + 24 * 60 * 60 * 1000 // 24 hours
+  localStorage.setItem('token', newToken);
+  localStorage.setItem('token_expiry', expiry);
+  setToken(newToken);
+  }
   return (
     <div className="App">
       <h1>ClearCents</h1>
@@ -13,7 +22,7 @@ function App() {
       {token ? (
         <Dashboard token={token} />
       ) : (
-        <Login onLogin={setToken} />
+        <Login onLogin={handleLogin} />
       )}
     </div>
   );
