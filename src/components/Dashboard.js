@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import './Dashboard.css';
+import styles from './Dashboard.module.css';
 
 function Dashboard({ token }) {
   const [subscriptions, setSubscriptions] = useState([]);
@@ -8,18 +8,18 @@ function Dashboard({ token }) {
   const [price, setPrice] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:3000/subscriptions', {
+    fetch('http://localhost:5000/subscriptions', {
       headers: { 'Authorization': `Bearer ${token}` }
     })
       .then(res => res.json())
       .then(data => {
-        setSubscriptions(data);
+        setSubscriptions(Array.isArray(data) ? data : []);
         setLoading(false);
       });
   }, [token]);
 
   const handleAdd = () => {
-    fetch('http://localhost:3000/subscriptions', {
+    fetch('http://localhost:5000/subscriptions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -29,14 +29,18 @@ function Dashboard({ token }) {
     })
       .then(res => res.json())
       .then(data => {
-        setSubscriptions([...subscriptions, data[0]]);
+        if (Array.isArray(data) && data[0]) {
+        setSubscriptions(prev => [...prev, data[0]]);
         setName('');
         setPrice('');
+      } else {
+        console.error('Add subscription failed:', data);
+      }
       });
   };
 
   const handleDelete = (id) => {
-  fetch(`http://localhost:3000/subscriptions/${id}`, {
+  fetch(`http://localhost:5000/subscriptions/${id}`, {
     method: 'DELETE',
     headers: { 'Authorization': `Bearer ${token}` }
   })
@@ -47,21 +51,21 @@ function Dashboard({ token }) {
 
   return (
     <div>
-      <div className="dashboard">
+      <div className={styles.dashboard}>
         <h2>My Subscriptions</h2>
         {loading ? (
           <p>Loading...</p>
         ) : (
           subscriptions.map(sub => (
-            <div key={sub.id} className="subscription-card">
+            <div key={sub.id} className={styles.subscriptionCard}>
               <h3>{sub.name}</h3>
               <p>${sub.price}/month</p>
-              <button className="delete-btn" onClick={() => handleDelete(sub.id)}>Delete</button>
+              <button className={styles.deleteBtn} onClick={() => handleDelete(sub.id)}>Delete</button>
             </div>
           ))
         )}
       </div>
-      <div className="add-form">
+      <div className={styles.addForm}>
         <input
           type="text"
           placeholder="Subscription name"

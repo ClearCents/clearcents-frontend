@@ -1,4 +1,4 @@
-.login-container {
+.signupContainer {
   background: white;
   border-radius: 12px;
   padding: 40px;
@@ -7,13 +7,13 @@
   margin: 0 auto;
 }
 
-.login-container h2 {
+.signupContainer h2 {
   font-size: 22px;
   color: #1a1a2e;
   margin-bottom: 25px;
 }
 
-.login-container input {
+.signupContainer input {
   width: 100%;
   padding: 12px 15px;
   border: 1px solid #ddd;
@@ -23,7 +23,7 @@
   outline: none;
 }
 
-.login-container button {
+.signupContainer button {
   width: 100%;
   padding: 12px;
   background: #1a1a2e;
@@ -34,7 +34,7 @@
   cursor: pointer;
 }
 
-.login-container button:hover {
+.signupContainer button:hover {
   background: #e63946;
 }
 
@@ -42,4 +42,23 @@
   color: #e63946;
   margin-top: 10px;
   font-size: 14px;
+}
+
+.authRedirect {
+  text-align: left;
+  font-size: 0.9rem;
+  color: #666;
+  padding: 6px;
+
+}
+
+.authRedirect a {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 0.25rem;
+}
+
+.authRedirect a:hover {
+  text-decoration: underline;
 }

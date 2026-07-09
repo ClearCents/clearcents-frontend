@@ -1,30 +1,68 @@
-import './App.css';
-import Dashboard from './components/Dashboard';
+import { BrowserRouter, Routes, Route, Navigate, NavLink } from 'react-router-dom';
 import { useState } from 'react';
-import Login from './components/Login';
-
+import Dashboard from './components/Dashboard';
+import Signin from './components/Signin';
+import Signup from './components/Signup';
+import './App.css';
 
 function App() {
-  const storedToken = localStorage.getItem('token');
-  const storedExpiry = localStorage.getItem('token_expiry');
-  const isValid = storedExpiry && Date.now() < parseInt(storedExpiry);
-  const [token, setToken] = useState(isValid ? storedToken : null);
-  const handleLogin = (newToken) => {
-  const expiry = Date.now() + 24 * 60 * 60 * 1000 // 24 hours
-  localStorage.setItem('token', newToken);
-  localStorage.setItem('token_expiry', expiry);
-  setToken(newToken);
-  }
+  const [token, setToken] = useState(localStorage.getItem('token'));
+
+  const handleSignin = (newToken) => {
+    localStorage.setItem('token', newToken);
+    setToken(newToken);
+  };
+
+  const handleSignout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('token_expiry');
+    setToken(null);
+  };
+
   return (
-    <div className="App">
-      <h1>ClearCents</h1>
-      <p>Know what you pay. Own what you use.</p>
-      {token ? (
-        <Dashboard token={token} />
-      ) : (
-        <Login onLogin={handleLogin} />
-      )}
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        {token && (
+          <nav className="navbar">
+            <div className="nav-brand">ClearCents</div>
+            <div className="nav-tabs">
+              <NavLink to="/" end className={({ isActive }) => isActive ? 'tab active' : 'tab'}>
+                Dashboard
+              </NavLink>
+              <NavLink to="/insights" className={({ isActive }) => isActive ? 'tab active' : 'tab'}>
+                Insights
+              </NavLink>
+              <NavLink to="/account" className={({ isActive }) => isActive ? 'tab active' : 'tab'}>
+                Account
+              </NavLink>
+            </div>
+            <button className="signout-btn" onClick={handleSignout}>Sign out</button>
+          </nav>
+        )}
+
+        <div className={token ? 'content' : 'signin-wrapper'}>
+          {!token && <div className="signin-page-brand">ClearCents</div>}
+
+          <Routes>
+            <Route path="/" element={token ? <Dashboard token={token} /> : <Navigate to="/signin" />} />
+            <Route path="/insights" element={token ? <div><h2>Insights coming soon</h2></div> : <Navigate to="/signin" />} />
+            <Route path="/account" element={token ? <div><h2>Account</h2></div> : <Navigate to="/signin" />} />
+            <Route path="/signin" element={token ? <Navigate to="/" /> : <Signin onSignin={handleSignin} />} />
+            <Route path="/signup" element={token ? <Navigate to="/" /> : <Signup onSignup={handleSignin} />} />
+            <Route path="*" element={<Navigate to={token ? "/" : "/signin"} />} />
+          </Routes>
+        </div>
+
+        <footer className="footer">
+          <div className="footer-links">
+            <a href="#">Support</a>
+            <a href="#">Help</a>
+            <a href="#">Licensing</a>
+          </div>
+          <p className="footer-copy">© 2026 ClearCents. All rights reserved.</p>
+        </footer>
+      </div>
+    </BrowserRouter>
   );
 }
 
