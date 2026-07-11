@@ -1,0 +1,79 @@
+.helpContainer {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  max-width: 600px;
+  margin: 40px auto;
+}
+
+.helpContainer h2 {
+  font-size: 28px;
+  color: #1a1a2e;
+  margin-bottom: 10px;
+}
+
+.intro {
+  font-size: 15px;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.section {
+  margin-bottom: 30px;
+}
+
+.section:last-child {
+  margin-bottom: 0;
+}
+
+.section h3 {
+  font-size: 18px;
+  color: #1a1a2e;
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.section p {
+  font-size: 14px;
+  color: #444;
+  line-height: 1.6;
+}
+
+.section a {
+  color: #7c3aed;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.section a:hover {
+  text-decoration: underline;
+}
+
+.helpItem {
+  margin-bottom: 20px;
+}
+
+.helpItem:last-child {
+  margin-bottom: 0;
+}
+
+.helpItem h4 {
+  font-size: 15px;
+  color: #1a1a2e;
+  margin-bottom: 6px;
+}
+
+.helpItem p {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.footerNote {
+  font-size: 13px;
+  color: #999;
+  text-align: center;
+  padding-top: 10px;
+}

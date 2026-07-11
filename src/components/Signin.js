@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 import styles from './Signin.module.css';
+import { LuEye, LuEyeOff } from 'react-icons/lu';
 
 function Signin({ onSignin }) {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSignin = () => {
     if(!email || !password){
@@ -50,14 +52,17 @@ function Signin({ onSignin }) {
     />
 
       <br />
-      <input
-        type="password"
+      <div className={styles.passwordWrapper}><input
+        type={showPassword ? "text" : "password"}
         placeholder="Password"
         value={password}
         onChange={e => setPassword(e.target.value)}
         autoComplete="current-password"
       />
-      <br />
+      <button type="button" className={styles.togglePassword} onClick={() => setShowPassword(prev => !prev)}>
+        {showPassword ? <LuEyeOff size={20} /> : <LuEye size={20} />}
+</button>
+      </div>
       <button onClick={handleSignin}>Sign in</button>
       <p className={styles.authRedirect}>
   Don't have an account? <Link to="/signup">Sign up</Link>   

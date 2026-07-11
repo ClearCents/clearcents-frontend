@@ -3,6 +3,9 @@ import { useState } from 'react';
 import Dashboard from './components/Dashboard';
 import Signin from './components/Signin';
 import Signup from './components/Signup';
+import Support from './components/Support';
+import Help from './components/Help';
+import Licensing from './components/Licensing';
 import './App.css';
 
 function App() {
@@ -22,7 +25,7 @@ function App() {
   return (
     <BrowserRouter>
       <div className="App">
-        {token && (
+            {token ? (
           <nav className="navbar">
             <div className="nav-brand">ClearCents</div>
             <div className="nav-tabs">
@@ -38,10 +41,23 @@ function App() {
             </div>
             <button className="signout-btn" onClick={handleSignout}>Sign out</button>
           </nav>
+        ) : (
+          <nav className="navbar">
+            <NavLink to="/signin" className="nav-brand-link">
+              <div className="nav-brand">ClearCents</div>
+            </NavLink>
+            <div className="nav-tabs">
+              <NavLink to="/signin" className={({ isActive }) => isActive ? 'tab active' : 'tab'}>
+                Sign in
+              </NavLink>
+              <NavLink to="/signup" className={({ isActive }) => isActive ? 'tab active' : 'tab'}>
+                Sign up
+              </NavLink>
+            </div>
+          </nav>
         )}
 
         <div className={token ? 'content' : 'signin-wrapper'}>
-          {!token && <div className="signin-page-brand">ClearCents</div>}
 
           <Routes>
             <Route path="/" element={token ? <Dashboard token={token} /> : <Navigate to="/signin" />} />
@@ -49,15 +65,18 @@ function App() {
             <Route path="/account" element={token ? <div><h2>Account</h2></div> : <Navigate to="/signin" />} />
             <Route path="/signin" element={token ? <Navigate to="/" /> : <Signin onSignin={handleSignin} />} />
             <Route path="/signup" element={token ? <Navigate to="/" /> : <Signup onSignup={handleSignin} />} />
-            <Route path="*" element={<Navigate to={token ? "/" : "/signin"} />} />
+            <Route path="/support" element={token ? <Navigate to="/"/> : <Support />} />
+            <Route path="/help" element={token ? <Navigate to="/"/> : <Help />} />
+            <Route path="/licensing" element={token ? <Navigate to="/"/> : <Licensing />} />
+            
           </Routes>
         </div>
 
         <footer className="footer">
           <div className="footer-links">
-            <a href="#">Support</a>
-            <a href="#">Help</a>
-            <a href="#">Licensing</a>
+            <a href="/support">Support</a>
+            <a href="/help">Help</a>
+            <a href="/licensing">Licensing</a>
           </div>
           <p className="footer-copy">© 2026 ClearCents. All rights reserved.</p>
         </footer>

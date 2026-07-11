@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 import styles from './Signup.module.css';
+import { LuEye, LuEyeOff } from 'react-icons/lu';
 
 function Signup({ onSignup }) {
   const navigate = useNavigate();
@@ -8,6 +9,7 @@ function Signup({ onSignup }) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSignup = () => {
     if(!email || !password || !confirmPassword){
@@ -56,21 +58,28 @@ function Signup({ onSignup }) {
         onChange={e => setEmail(e.target.value)}
       />
       <br />
-      <input
-        type="password"
+      <div className={styles.passwordWrapper}><input
+        type={showPassword ? "text" : "password"}
         placeholder="Password"
         value={password}
         onChange={e => setPassword(e.target.value)}
         autoComplete="new-password"
       />
-      <input
-        type="password"
+      <button type="button" className={styles.togglePassword} onClick={() => setShowPassword(prev => !prev)}>
+        {showPassword ? <LuEyeOff size={20} /> : <LuEye size={20} />}
+</button>
+      </div>
+      <div className={styles.passwordWrapper}><input
+        type={showPassword ? "text" : "password"}
         placeholder="Confirm password"
         value={confirmPassword}
         onChange={e => setConfirmPassword(e.target.value)}
         autoComplete="new-password"
       />
-      <br />
+      <button type="button" className={styles.togglePassword} onClick={() => setShowPassword(prev => !prev)}>
+        {showPassword ? <LuEyeOff size={20} /> : <LuEye size={20} />}
+</button>
+      </div>
       <button onClick={handleSignup}>Sign up</button>
       <p className={styles.authRedirect}>
   Already have an account? <Link to="/signin">Sign in</Link>

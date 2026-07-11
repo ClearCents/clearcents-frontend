@@ -45,23 +45,25 @@ body {
 .tab {
   padding: 10px 24px;
   border: none;
-  background: transparent;
-  color: #888;
+  background: white;
+  color: #444;
   font-size: 16px;
   cursor: pointer;
   border-radius: 6px;
   font-weight: 500;
+  text-decoration: none;
+  display: inline-block;
 }
 
 .tab:hover {
-  color: #7c3aed;
+  background: #f0f0f0;
 }
 
 .tab.active {
-  color: #7c3aed;
-  font-weight: 700;
-  font-size: 17px;
-  background: transparent;
+  background: #e5e5e5;
+  color: #444;
+  font-weight: 500;
+  font-size: 16px;
 }
 
 .signout-btn {
@@ -136,4 +138,8 @@ body {
   justify-content: center;
   padding: 40px 20px;
   position: relative;
+}
+
+.nav-brand-link {
+  text-decoration: none;
 }
