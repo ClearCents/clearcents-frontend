@@ -6,6 +6,7 @@ import Signup from './components/Signup';
 import Support from './components/Support';
 import Help from './components/Help';
 import Licensing from './components/Licensing';
+import Landing from './Landing';
 import './App.css';
 
 function App() {
@@ -41,28 +42,15 @@ function App() {
             </div>
             <button className="signout-btn" onClick={handleSignout}>Sign out</button>
           </nav>
-        ) : (
-          <nav className="navbar">
-            <NavLink to="/signin" className="nav-brand-link">
-              <div className="nav-brand">ClearCents</div>
-            </NavLink>
-            <div className="nav-tabs">
-              <NavLink to="/signin" className={({ isActive }) => isActive ? 'tab active' : 'tab'}>
-                Sign in
-              </NavLink>
-              <NavLink to="/signup" className={({ isActive }) => isActive ? 'tab active' : 'tab'}>
-                Sign up
-              </NavLink>
-            </div>
-          </nav>
-        )}
+        ) : null}
 
         <div className={token ? 'content' : 'signin-wrapper'}>
 
           <Routes>
-            <Route path="/" element={token ? <Dashboard token={token} /> : <Navigate to="/signin" />} />
+            <Route path="/" element={token ? <Dashboard token={token} /> : <Navigate to="/landing" />} />
             <Route path="/insights" element={token ? <div><h2>Insights coming soon</h2></div> : <Navigate to="/signin" />} />
             <Route path="/account" element={token ? <div><h2>Account</h2></div> : <Navigate to="/signin" />} />
+            <Route path="/landing" element={<Landing />} />
             <Route path="/signin" element={token ? <Navigate to="/" /> : <Signin onSignin={handleSignin} />} />
             <Route path="/signup" element={token ? <Navigate to="/" /> : <Signup onSignup={handleSignin} />} />
             <Route path="/support" element={token ? <Navigate to="/"/> : <Support />} />
