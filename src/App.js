@@ -6,6 +6,7 @@ import Signup from './components/Signup';
 import Support from './components/Support';
 import Help from './components/Help';
 import Licensing from './components/Licensing';
+import Account from './components/Account';
 import './App.css';
 
 function App() {
@@ -62,7 +63,7 @@ function App() {
           <Routes>
             <Route path="/" element={token ? <Dashboard token={token} /> : <Navigate to="/signin" />} />
             <Route path="/insights" element={token ? <div><h2>Insights coming soon</h2></div> : <Navigate to="/signin" />} />
-            <Route path="/account" element={token ? <div><h2>Account</h2></div> : <Navigate to="/signin" />} />
+            <Route path="/account" element={<Account />} />
             <Route path="/signin" element={token ? <Navigate to="/" /> : <Signin onSignin={handleSignin} />} />
             <Route path="/signup" element={token ? <Navigate to="/" /> : <Signup onSignup={handleSignin} />} />
             <Route path="/support" element={<Support />} />
