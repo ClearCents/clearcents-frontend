@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 function Account(){
     const [email, setEmail] = useState("");
     const [selectedCurrency, setSelectedCurrency] = useState(0);
+    const [subscriptions, setSubscriptions] = useState([]);
     const chooseCurr = (index) => {
         setSelectedCurrency(index);
     };
@@ -35,6 +36,39 @@ function Account(){
         fetchUser();
     }, []);
 
+    useEffect(() => {
+    const fetchSubscriptions = async () => {
+        const token = localStorage.getItem("token");
+
+        if (!token) return;
+
+        try {
+            const response = await fetch("http://localhost:5000/subscriptions", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setSubscriptions(data);
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+        fetchSubscriptions();
+    }, []);
+
+    const totalNumber = subscriptions.length;
+
+    const totalPrice = subscriptions.reduce(
+        (sum, sub) => sum + Number(sub.price),
+        0
+    );
+
     return (<div className={styles.accountContainer}>
       <div className={styles.email}>
         <div className={styles.avatarRow}>
@@ -52,12 +86,14 @@ function Account(){
         <div className={styles.statsRow}>
             <div className={styles.statCard}>
             <div className={styles.statIcon}><LuLayers size={22} /></div>
-            <div className={styles.statValue}>7</div>
+            <div className={styles.statValue}>{totalNumber}</div>
             <div className={styles.statLabel}>Active Subscriptions</div>
             </div>
             <div className={styles.statCard}>
             <div className={styles.statIcon}><LuWallet size={22} /></div>
-            <div className={styles.statValue}>$84.50</div>
+            <div className={styles.statValue}>
+                ${totalPrice.toFixed(2)}
+            </div>
             <div className={styles.statLabel}>Total Monthly Spend</div>
             </div>
         </div>

@@ -6,6 +6,8 @@ function Dashboard({ token }) {
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [totalNumber, setTotalNumber] = useState(0);
 
   useEffect(() => {
     fetch('http://localhost:5000/subscriptions', {
