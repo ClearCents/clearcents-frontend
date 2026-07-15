@@ -18,6 +18,10 @@ body {
   flex-direction: column;
 }
 
+.content {
+  flex: 1;
+}
+
 .navbar {
   display: flex;
   align-items: center;
@@ -142,4 +146,11 @@ body {
 
 .nav-brand-link {
   text-decoration: none;
+}
+
+.auth-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
