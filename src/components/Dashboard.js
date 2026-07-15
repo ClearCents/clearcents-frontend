@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import styles from './Dashboard.module.css';
 
+const currencySymbols = { USD: '$', EUR: '€', GBP: '£', JPY: '¥', INR: '₹' };
+
 function Dashboard({ token }) {
   const [subscriptions, setSubscriptions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,6 +16,10 @@ function Dashboard({ token }) {
       .then(res => res.json())
       .then(data => {
         setSubscriptions(Array.isArray(data) ? data : []);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Failed to fetch subscriptions:', err);
         setLoading(false);
       });
   }, [token]);
@@ -30,24 +36,30 @@ function Dashboard({ token }) {
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data) && data[0]) {
-        setSubscriptions(prev => [...prev, data[0]]);
-        setName('');
-        setPrice('');
-      } else {
-        console.error('Add subscription failed:', data);
-      }
+          setSubscriptions(prev => [...prev, data[0]]);
+          setName('');
+          setPrice('');
+        } else {
+          console.error('Add subscription failed:', data);
+        }
+      })
+      .catch(err => {
+        console.error('Network error adding subscription:', err);
       });
   };
 
   const handleDelete = (id) => {
-  fetch(`http://localhost:5000/subscriptions/${id}`, {
-    method: 'DELETE',
-    headers: { 'Authorization': `Bearer ${token}` }
-  })
-    .then(() => {
-      setSubscriptions(subscriptions.filter(sub => sub.id !== id));
-    });
-};
+    fetch(`http://localhost:5000/subscriptions/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+      .then(() => {
+        setSubscriptions(prev => prev.filter(sub => sub.id !== id));
+      })
+      .catch(err => {
+        console.error('Failed to delete subscription:', err);
+      });
+  };
 
   return (
     <div>
@@ -59,7 +71,7 @@ function Dashboard({ token }) {
           subscriptions.map(sub => (
             <div key={sub.id} className={styles.subscriptionCard}>
               <h3>{sub.name}</h3>
-              <p>${sub.price}/month</p>
+              <p>{currencySymbols[sub.currency] || sub.currency}{sub.price}/month</p>
               <button className={styles.deleteBtn} onClick={() => handleDelete(sub.id)}>Delete</button>
             </div>
           ))

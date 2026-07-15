@@ -232,3 +232,10 @@
   font-weight: 700;
   flex-shrink: 0;
 }
+
+.savedMessage {
+  color: #16a34a;
+  font-size: 13px;
+  margin-top: 10px;
+  font-weight: 500;
+}

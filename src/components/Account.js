@@ -1,133 +1,164 @@
 import styles from './Account.module.css';
-import { LuDollarSign , LuEuro, LuPoundSterling , LuJapaneseYen , LuIndianRupee , LuLayers , LuWallet , LuMail } from "react-icons/lu";
+import { LuDollarSign, LuEuro, LuPoundSterling, LuJapaneseYen, LuIndianRupee, LuLayers, LuWallet, LuMail } from "react-icons/lu";
 import { useState, useEffect } from 'react';
 
-function Account(){
+const currencyList = ['USD', 'EUR', 'GBP', 'JPY', 'INR'];
+const currencySymbols = { USD: '$', EUR: '€', GBP: '£', JPY: '¥', INR: '₹' };
+
+function Account({ token }) {
     const [email, setEmail] = useState("");
     const [selectedCurrency, setSelectedCurrency] = useState(0);
     const [subscriptions, setSubscriptions] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [saved, setSaved] = useState(false);
+
     const chooseCurr = (index) => {
         setSelectedCurrency(index);
+        setSaved(false);
     };
 
+    // Fetch user's email
     useEffect(() => {
-    const fetchUser = async () => {
-        const token = localStorage.getItem("token");
-
         if (!token) return;
+        fetch("http://localhost:5000/auth/me", {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+            .then(res => res.json())
+            .then(data => setEmail(data.email))
+            .catch(err => console.error("Failed to fetch user:", err));
+    }, [token]);
 
-        try {
-            const response = await fetch("http://localhost:5000/auth/me", {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                setEmail(data.email);
-            }
-        } catch (err) {
-            console.error("Failed to fetch user:", err);
-        }
-    };
-
-        fetchUser();
-    }, []);
-
+    // Fetch subscriptions
     useEffect(() => {
-    const fetchSubscriptions = async () => {
-        const token = localStorage.getItem("token");
-
         if (!token) return;
+        fetch("http://localhost:5000/subscriptions", {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+            .then(res => res.json())
+            .then(data => setSubscriptions(Array.isArray(data) ? data : []))
+            .catch(err => console.error("Failed to fetch subscriptions:", err));
+    }, [token]);
 
-        try {
-            const response = await fetch("http://localhost:5000/subscriptions", {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                setSubscriptions(data);
-            }
-        } catch (err) {
-            console.error(err);
+    // Fetch preferred currency
+    useEffect(() => {
+        if (!token) {
+            setLoading(false);
+            return;
         }
-    };
-
-        fetchSubscriptions();
-    }, []);
+        fetch("http://localhost:5000/profile/currency", {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+            .then(res => res.json())
+            .then(data => {
+                const index = currencyList.indexOf(data.preferred_currency);
+                setSelectedCurrency(index !== -1 ? index : 0);
+            })
+            .catch(err => console.error("Failed to fetch currency:", err))
+            .finally(() => setLoading(false));
+    }, [token]);
 
     const totalNumber = subscriptions.length;
 
-    const totalPrice = subscriptions.reduce(
-        (sum, sub) => sum + Number(sub.price),
-        0
-    );
+    // Group totals by each subscription's own currency (Option A)
+    const totalsByCurrency = subscriptions.reduce((acc, sub) => {
+        const cur = sub.currency || 'USD';
+        acc[cur] = (acc[cur] || 0) + Number(sub.price);
+        return acc;
+    }, {});
 
-    return (<div className={styles.accountContainer}>
-      <div className={styles.email}>
-        <div className={styles.avatarRow}>
-            <div className={styles.avatar}>
-                {email ? email[0].toUpperCase() : ""}
+    const handleSaveCurrency = () => {
+        setSaving(true);
+        setSaved(false);
+        fetch('http://localhost:5000/profile/currency', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ currency: currencyList[selectedCurrency] })
+        })
+            .then(res => res.json())
+            .then(() => setSaved(true))
+            .catch(() => console.error('Failed to save currency'))
+            .finally(() => setSaving(false));
+    };
+
+    return (
+        <div className={styles.accountContainer}>
+            <div className={styles.email}>
+                <div className={styles.avatarRow}>
+                    <div className={styles.avatar}>
+                        {email ? email[0].toUpperCase() : ""}
+                    </div>
+                    <div>
+                        <h1><LuMail size={16} /> Email</h1>
+                        <p>{email}</p>
+                    </div>
+                </div>
             </div>
-            <div>
-            <h1><LuMail size={16} /> Email</h1>
-            <p>{email}</p>
+
+            <div className={styles.subscriptions}>
+                <h1>Subscriptions</h1>
+                <div className={styles.statsRow}>
+                    <div className={styles.statCard}>
+                        <div className={styles.statIcon}><LuLayers size={22} /></div>
+                        <div className={styles.statValue}>{totalNumber}</div>
+                        <div className={styles.statLabel}>Active Subscriptions</div>
+                    </div>
+                    <div className={styles.statCard}>
+                        <div className={styles.statIcon}><LuWallet size={22} /></div>
+                        <div className={styles.statValue}>
+                            {Object.keys(totalsByCurrency).length === 0 ? (
+                                <span>{currencySymbols['USD']}0.00</span>
+                            ) : (
+                                Object.entries(totalsByCurrency).map(([cur, total]) => (
+                                    <div key={cur}>
+                                        {currencySymbols[cur] || cur}{total.toFixed(2)}
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                        <div className={styles.statLabel}>Total Monthly Spend</div>
+                    </div>
+                </div>
+            </div>
+
+            <div className={styles.currency}>
+                <h1>Preferred Currency</h1>
+                {loading ? (
+                    <p>Loading...</p>
+                ) : (
+                    <div className={styles.chooseCurrency}>
+                        <div className={selectedCurrency === 0 ? styles.chosenDiv : styles.currencyDiv} onClick={() => chooseCurr(0)}>
+                            <LuDollarSign size={18} />
+                        </div>
+                        <div className={selectedCurrency === 1 ? styles.chosenDiv : styles.currencyDiv} onClick={() => chooseCurr(1)}>
+                            <LuEuro size={18} />
+                        </div>
+                        <div className={selectedCurrency === 2 ? styles.chosenDiv : styles.currencyDiv} onClick={() => chooseCurr(2)}>
+                            <LuPoundSterling size={18} />
+                        </div>
+                        <div className={selectedCurrency === 3 ? styles.chosenDiv : styles.currencyDiv} onClick={() => chooseCurr(3)}>
+                            <LuJapaneseYen size={18} />
+                        </div>
+                        <div className={selectedCurrency === 4 ? styles.chosenDiv : styles.currencyDiv} onClick={() => chooseCurr(4)}>
+                            <LuIndianRupee size={18} />
+                        </div>
+                        <button onClick={handleSaveCurrency} disabled={saving}>
+                            {saving ? 'Saving...' : 'Save'}
+                        </button>
+                    </div>
+                )}
+                {saved && <p className={styles.savedMessage}>✓ Currency preference saved</p>}
+            </div>
+
+            <div className={styles.deleteSection}>
+                <h1>Delete Account</h1>
+                <button className={styles.deleteBtn}>Delete</button>
             </div>
         </div>
-      </div>
-      <div className={styles.subscriptions}>
-        <h1>Subscriptions</h1>
-        <div className={styles.statsRow}>
-            <div className={styles.statCard}>
-            <div className={styles.statIcon}><LuLayers size={22} /></div>
-            <div className={styles.statValue}>{totalNumber}</div>
-            <div className={styles.statLabel}>Active Subscriptions</div>
-            </div>
-            <div className={styles.statCard}>
-            <div className={styles.statIcon}><LuWallet size={22} /></div>
-            <div className={styles.statValue}>
-                ${totalPrice.toFixed(2)}
-            </div>
-            <div className={styles.statLabel}>Total Monthly Spend</div>
-            </div>
-        </div>
-        </div>
-      <div className={styles.currency}>
-        <h1>Preferred Currency:</h1>
-        <div className={styles.chooseCurrency}>
-            <div className={selectedCurrency === 0 ? styles.chosenDiv : styles.currencyDiv} onClick={() => chooseCurr(0)}>
-        <LuDollarSign size={18} />
-        <span className={styles.currencyLabel}>USD</span>
-        </div>
-        <div className={selectedCurrency === 1 ? styles.chosenDiv : styles.currencyDiv} onClick={() => chooseCurr(1)}>
-        <LuEuro size={18} />
-        <span className={styles.currencyLabel}>EUR</span>
-        </div>
-        <div className={selectedCurrency === 2 ? styles.chosenDiv : styles.currencyDiv} onClick={() => chooseCurr(2)}>
-        <LuPoundSterling size={18} />
-        <span className={styles.currencyLabel}>GBP</span>
-        </div>
-        <div className={selectedCurrency === 3 ? styles.chosenDiv : styles.currencyDiv} onClick={() => chooseCurr(3)}>
-        <LuJapaneseYen size={18} />
-        <span className={styles.currencyLabel}>JPY</span>
-        </div>
-        <div className={selectedCurrency === 4 ? styles.chosenDiv : styles.currencyDiv} onClick={() => chooseCurr(4)}>
-        <LuIndianRupee size={18} />
-        <span className={styles.currencyLabel}>INR</span>
-        </div>
-        <button>Save</button></div>
-        </div>
-        <div className={styles.deleteSection}>
-        <h1>Delete Account</h1>
-        <button className={styles.deleteBtn}>Delete</button>
-        </div>
-    </div>)
+    );
 }
 
 export default Account;
