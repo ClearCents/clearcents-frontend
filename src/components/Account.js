@@ -7,6 +7,7 @@ const currencySymbols = { USD: '$', EUR: '€', GBP: '£', JPY: '¥', INR: '₹'
 
 function Account({ token }) {
     const [email, setEmail] = useState("");
+    const [createdAt, setCreatedAt] = useState("");
     const [selectedCurrency, setSelectedCurrency] = useState(0);
     const [subscriptions, setSubscriptions] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -25,7 +26,11 @@ function Account({ token }) {
             headers: { Authorization: `Bearer ${token}` }
         })
             .then(res => res.json())
-            .then(data => setEmail(data.email))
+            .then(data => {
+                setEmail(data.email);
+                setCreatedAt(data.created_at);
+            })
+            
             .catch(err => console.error("Failed to fetch user:", err));
     }, [token]);
 
@@ -67,6 +72,30 @@ function Account({ token }) {
         return acc;
     }, {});
 
+    const formattedDate = createdAt
+    ? new Date(createdAt).toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric"
+    })
+    : "";
+
+    const averageByCurrency = subscriptions.reduce((acc, sub) => {
+    const cur = sub.currency || 'USD';
+
+    if (!acc[cur]) {
+        acc[cur] = {
+            total: 0,
+            count: 0
+        };
+    }
+
+    acc[cur].total += Number(sub.price);
+    acc[cur].count++;
+
+    return acc;
+}, {});
+
     const handleSaveCurrency = () => {
         setSaving(true);
         setSaved(false);
@@ -84,6 +113,41 @@ function Account({ token }) {
             .finally(() => setSaving(false));
     };
 
+    const handleDeleteAccount = async () => {
+    const confirmed = window.confirm(
+        "Are you sure you want to permanently delete your account? This action cannot be undone."
+    );
+
+    if (!confirmed) return;
+
+    try {
+        const res = await fetch("http://localhost:5000/auth/delete-account", {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(data.error || "Failed to delete account");
+        }
+
+        // Remove saved login
+        localStorage.removeItem("token");
+
+        alert("Your account has been deleted.");
+
+        // Redirect to sign in
+        window.location.href = "/signin";
+
+    } catch (err) {
+        console.error(err);
+        alert(err.message);
+    }
+};
+
     return (
         <div className={styles.accountContainer}>
             <div className={styles.email}>
@@ -92,9 +156,15 @@ function Account({ token }) {
                         {email ? email[0].toUpperCase() : ""}
                     </div>
                     <div>
-                        <h1><LuMail size={16} /> Email</h1>
-                        <p>{email}</p>
-                    </div>
+                    <h1><LuMail size={16} /> Email</h1>
+                    <p>{email}</p>
+
+                    {formattedDate && (
+                        <p>
+                            Joined {formattedDate}
+                        </p>
+                    )}
+                </div>
                 </div>
             </div>
 
@@ -121,6 +191,26 @@ function Account({ token }) {
                         </div>
                         <div className={styles.statLabel}>Total Monthly Spend</div>
                     </div>
+                    <div className={styles.statCard}>
+                    <div className={styles.statIcon}>
+                        <LuWallet size={22} />
+                    </div>
+                    <div className={styles.statValue}>
+                        {Object.keys(averageByCurrency).length === 0 ? (
+                            <span>$0.00</span>
+                        ) : (
+                            Object.entries(averageByCurrency).map(([cur, data]) => (
+                                <div key={cur}>
+                                    {currencySymbols[cur] || cur}
+                                    {(data.total / data.count).toFixed(2)}
+                                </div>
+                            ))
+                        )}
+                    </div>
+            <div className={styles.statLabel}>
+                Average Subscription Cost
+            </div>
+        </div>
                 </div>
             </div>
 
@@ -155,7 +245,7 @@ function Account({ token }) {
 
             <div className={styles.deleteSection}>
                 <h1>Delete Account</h1>
-                <button className={styles.deleteBtn}>Delete</button>
+                <button className={styles.deleteBtn} onClick={handleDeleteAccount}>Delete</button>
             </div>
         </div>
     );
