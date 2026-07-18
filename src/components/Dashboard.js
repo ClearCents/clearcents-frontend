@@ -16,8 +16,17 @@ function Dashboard({ token }) {
     fetch('http://localhost:5000/subscriptions', {
       headers: { 'Authorization': `Bearer ${token}` }
     })
-      .then(res => res.json())
+      .then(res => {
+        if (res.status === 401) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('token_expiry');
+          window.location.href = '/signin';
+          return null;
+        }
+        return res.json();
+      })
       .then(data => {
+        if (!data) return;
         setSubscriptions(Array.isArray(data) ? data : []);
         setLoading(false);
       })
@@ -26,7 +35,7 @@ function Dashboard({ token }) {
         setLoading(false);
       });
   }, [token]);
-
+  
   const handleAdd = () => {
     fetch('http://localhost:5000/subscriptions', {
       method: 'POST',

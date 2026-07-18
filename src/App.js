@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate, NavLink, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Dashboard from './components/Dashboard';
 import Signin from './components/Signin';
@@ -11,11 +11,16 @@ import Landing from './Landing';
 import './App.css';
 
 function AppContent() {
-  const [token, setToken] = useState(localStorage.getItem('token'));
+  const storedToken = localStorage.getItem('token');
+  const storedExpiry = localStorage.getItem('token_expiry');
+  const isValid = storedExpiry && Date.now() < parseInt(storedExpiry);
+  const [token, setToken] = useState(isValid ? storedToken : null);
   const location = useLocation();
 
-  const handleSignin = (newToken) => {
+ const handleSignin = (newToken) => {
+    const expiry = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
     localStorage.setItem('token', newToken);
+    localStorage.setItem('token_expiry', expiry);
     setToken(newToken);
   };
 
@@ -31,7 +36,7 @@ function AppContent() {
     <div className="App">
       {token ? (
         <nav className="navbar">
-          <div className="nav-brand">ClearCents</div>
+          <NavLink to="/landing" className="nav-brand">ClearCents</NavLink>
           <div className="nav-tabs">
             <NavLink to="/" end className={({ isActive }) => isActive ? 'tab active' : 'tab'}>
               Dashboard

@@ -148,6 +148,10 @@ body {
   text-decoration: none;
 }
 
+.nav-brand {
+  text-decoration: none;
+}
+
 .auth-wrapper {
   flex: 1;
   display: flex;
