@@ -1,14 +1,15 @@
 .accountContainer {
-  background: white;
+  background: var(--bg-primary);
   border-radius: 12px;
   padding: 40px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  box-shadow: var(--card-shadow);
   max-width: 800px;
   margin: 40px auto;
+  transition: background 0.2s ease;
 }
 
 .accountContainer > div:hover {
-  background: #fafafa;
+  background: var(--bg-hover);
   margin: 0 -20px;
   padding-left: 20px;
   padding-right: 20px;
@@ -19,11 +20,14 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  font-size: 18px;
+  color: var(--text-primary);
+  margin-bottom: 10px;
 }
 
 .accountContainer > div {
   padding: 25px 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .accountContainer > div:first-child {
@@ -35,22 +39,16 @@
   padding-bottom: 0;
 }
 
-.accountContainer h1 {
-  font-size: 18px;
-  color: #1a1a2e;
-  margin-bottom: 10px;
-}
-
 .accountContainer h2 {
   font-size: 14px;
-  color: #666;
+  color: var(--text-secondary);
   font-weight: 500;
   margin-bottom: 4px;
 }
 
 .accountContainer p {
   font-size: 15px;
-  color: #1a1a2e;
+  color: var(--text-primary);
   margin-bottom: 12px;
 }
 
@@ -75,42 +73,51 @@
 }
 
 .currencyDiv {
-  width: 42px;
-  height: 42px;
+  width: 52px;
+  height: 52px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 1.5px solid #ddd;
+  gap: 2px;
+  border: 1.5px solid var(--border-color);
   border-radius: 8px;
-  color: #666;
+  color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .currencyDiv:hover {
-  border-color: #7c3aed;
-  color: #7c3aed;
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .chosenDiv {
-  width: 42px;
-  height: 42px;
+  width: 52px;
+  height: 52px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 1.5px solid #7c3aed;
+  gap: 2px;
+  border: 1.5px solid var(--accent);
   border-radius: 8px;
-  background: #7c3aed;
+  background: var(--accent);
   color: white;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
+.currencyLabel {
+  font-size: 9px;
+  font-weight: 600;
+}
+
 .chooseCurrency button {
   margin-left: auto;
   padding: 10px 24px;
-  background: #1a1a2e;
-  color: white;
+  background: var(--button-solid-bg);
+  color: var(--button-solid-text);
   border: none;
   border-radius: 8px;
   font-size: 14px;
@@ -120,7 +127,8 @@
 }
 
 .chooseCurrency button:hover {
-  background: #7c3aed;
+  background: var(--accent);
+  color: white;
 }
 
 .statsRow {
@@ -130,16 +138,16 @@
 
 .statCard {
   flex: 1;
-  background: #f9f9fb;
-  border: 1px solid #eee;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   border-radius: 10px;
   padding: 20px;
   text-align: center;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, background 0.2s ease;
 }
 
 .statCard:hover {
-  border-color: #7c3aed;
+  border-color: var(--accent);
 }
 
 .statIcon {
@@ -149,7 +157,7 @@
   width: 40px;
   height: 40px;
   background: rgba(124, 58, 237, 0.1);
-  color: #7c3aed;
+  color: var(--accent);
   border-radius: 50%;
   margin-bottom: 10px;
 }
@@ -157,13 +165,13 @@
 .statValue {
   font-size: 26px;
   font-weight: 700;
-  color: #1a1a2e;
+  color: var(--text-primary);
   margin-bottom: 4px;
 }
 
 .statLabel {
   font-size: 13px;
-  color: #888;
+  color: var(--text-muted);
   font-weight: 500;
 }
 
@@ -173,6 +181,143 @@
   }
 }
 
+.avatarRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.savedMessage {
+  color: #16a34a;
+  font-size: 13px;
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+/* Appearance section */
+.appearance {
+  display: flex;
+  flex-direction: column;
+}
+
+.appearance h1 {
+  margin-bottom: 15px;
+}
+
+.themeGrid {
+  display: flex;
+  gap: 16px;
+}
+
+.themeCard, .themeCardActive {
+  flex: 1;
+  border-radius: 10px;
+  border: 1.5px solid var(--border-color);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.themeCard:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.themeCardActive {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+}
+
+.themePreviewLight, .themePreviewDark {
+  height: 100px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+}
+
+.themePreviewLight {
+  background: #ffffff;
+  border-bottom: 1px solid #eee;
+}
+
+.themePreviewDark {
+  background: #1a1a2e;
+  border-bottom: 1px solid #333;
+}
+
+.previewTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+
+.previewModeIcon {
+  color: #7c3aed;
+  opacity: 0.7;
+}
+
+.previewDot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #7c3aed;
+}
+
+.themePreviewLight .previewLineShort,
+.themePreviewLight .previewLineLong {
+  background: #ddd;
+}
+
+.themePreviewDark .previewLineShort,
+.themePreviewDark .previewLineLong {
+  background: #3a3a55;
+}
+
+.previewLineShort {
+  height: 8px;
+  width: 35%;
+  border-radius: 4px;
+}
+
+.previewLineLong {
+  height: 8px;
+  width: 65%;
+  border-radius: 4px;
+}
+
+.themeCardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+}
+
+.themeCardActive .themeCardFooter {
+  color: var(--accent);
+}
+
+/* Delete account section */
 .deleteSection {
   display: flex;
   align-items: center;
@@ -201,41 +346,82 @@
   color: white;
 }
 
-.currencyDiv, .chosenDiv {
-  flex-direction: column;
-  gap: 2px;
-  width: 52px;
-  height: 52px;
-}
-
-.currencyLabel {
-  font-size: 9px;
-  font-weight: 600;
-}
-
-.avatarRow {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: #7c3aed;
-  color: white;
+/* Delete confirmation modal */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
-  font-weight: 700;
-  flex-shrink: 0;
+  z-index: 1000;
+  padding: 0;
+  margin: 0;
+  border-bottom: none;
 }
 
-.savedMessage {
-  color: #16a34a;
+.modal {
+  background: var(--bg-primary);
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+}
+
+.modalIcon {
+  color: #dc2626;
+  margin-bottom: 12px;
+}
+
+.modal h2 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  color: var(--text-primary);
+}
+
+.modal p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.modalActions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.cancelBtn {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.confirmDeleteBtn {
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.confirmDeleteBtn:disabled,
+.cancelBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.errorMessage {
+  color: #dc2626;
   font-size: 13px;
-  margin-top: 10px;
-  font-weight: 500;
+  margin-top: 8px;
 }

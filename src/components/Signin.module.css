@@ -1,33 +1,35 @@
 .signinContainer {
-  background: white;
+  background: var(--bg-primary);
   border-radius: 12px;
   padding: 40px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  box-shadow: var(--card-shadow);
   max-width: 400px;
   margin: 0 auto;
 }
 
 .signinContainer h2 {
   font-size: 22px;
-  color: #1a1a2e;
+  color: var(--text-primary);
   margin-bottom: 25px;
 }
 
 .signinContainer input {
   width: 100%;
   padding: 12px 15px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   font-size: 14px;
   margin-bottom: 15px;
   outline: none;
+  background: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .signinContainer button {
   width: 100%;
   padding: 12px;
-  background: #090909;
-  color: white;
+  background: var(--text-primary);
+  color: var(--bg-primary);
   border: none;
   border-radius: 1000px;
   font-size: 16px;
@@ -35,7 +37,8 @@
 }
 
 .signinContainer button:hover {
-  background: #311361;
+  background: var(--accent);
+  color: white;
 }
 
 .error {
@@ -47,9 +50,8 @@
 .authRedirect {
   text-align: left;
   font-size: 0.9rem;
-  color: #666;
+  color: var(--text-secondary);
   padding: 6px;
-
 }
 
 .authRedirect a {
@@ -92,11 +94,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #999;
+  color: var(--text-muted);
   line-height: 0;
 }
 
 .passwordWrapper button.togglePassword:hover {
   background: none;
-  color: #7c3aed;
+  color: var(--accent);
 }

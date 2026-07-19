@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate, NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Dashboard from './components/Dashboard';
 import Signin from './components/Signin';
 import Signup from './components/Signup';
@@ -16,6 +16,7 @@ function AppContent() {
   const isValid = storedExpiry && Date.now() < parseInt(storedExpiry);
   const [token, setToken] = useState(isValid ? storedToken : null);
   const location = useLocation();
+  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
 
  const handleSignin = (newToken) => {
     const expiry = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
@@ -31,6 +32,11 @@ function AppContent() {
   };
 
   const isAuthPage = location.pathname === '/signin' || location.pathname === '/signup';
+
+  useEffect(() => {
+        document.documentElement.setAttribute("data-theme", theme);
+        localStorage.setItem("theme", theme);
+    }, [theme]);
 
   return (
     <div className="App">
@@ -72,7 +78,7 @@ function AppContent() {
         <Routes>
           <Route path="/" element={token ? <Dashboard token={token} /> : <Navigate to="/landing" />} />
           <Route path="/insights" element={token ? <div><h2>Insights coming soon</h2></div> : <Navigate to="/landing" />} />
-          <Route path="/account" element={token ? <Account token={token} /> : <Navigate to="/landing" />} />
+          <Route path="/account" element={token ? <Account token={token} theme={theme} setTheme={setTheme} /> : <Navigate to="/landing" />}/>
           <Route path="/landing" element={<Landing />} />
           <Route path="/signin" element={token ? <Navigate to="/" /> : <Signin onSignin={handleSignin} />} />
           <Route path="/signup" element={token ? <Navigate to="/" /> : <Signup onSignup={handleSignin} />} />

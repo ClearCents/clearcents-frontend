@@ -1,11 +1,11 @@
 import styles from './Account.module.css';
-import { LuDollarSign, LuEuro, LuPoundSterling, LuJapaneseYen, LuIndianRupee, LuLayers, LuWallet, LuMail } from "react-icons/lu";
+import { LuTriangleAlert, LuDollarSign, LuEuro, LuPoundSterling, LuJapaneseYen, LuIndianRupee, LuLayers, LuWallet, LuMail, LuCheck, LuSun, LuMoon } from "react-icons/lu";
 import { useState, useEffect } from 'react';
 
 const currencyList = ['USD', 'EUR', 'GBP', 'JPY', 'INR'];
 const currencySymbols = { USD: '$', EUR: '€', GBP: '£', JPY: '¥', INR: '₹' };
 
-function Account({ token }) {
+function Account({ token, theme, setTheme }) {
     const [email, setEmail] = useState("");
     const [createdAt, setCreatedAt] = useState("");
     const [selectedCurrency, setSelectedCurrency] = useState(0);
@@ -13,6 +13,10 @@ function Account({ token }) {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [saved, setSaved] = useState(false);
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+    const [deleteError, setDeleteError] = useState("");
 
     const chooseCurr = (index) => {
         setSelectedCurrency(index);
@@ -114,11 +118,8 @@ function Account({ token }) {
     };
 
     const handleDeleteAccount = async () => {
-    const confirmed = window.confirm(
-        "Are you sure you want to permanently delete your account? This action cannot be undone."
-    );
-
-    if (!confirmed) return;
+    setDeleting(true);
+    setDeleteError("");
 
     try {
         const res = await fetch("http://localhost:5000/auth/delete-account", {
@@ -137,14 +138,12 @@ function Account({ token }) {
         // Remove saved login
         localStorage.removeItem("token");
 
-        alert("Your account has been deleted.");
-
-        // Redirect to sign in
         window.location.href = "/signin";
 
     } catch (err) {
         console.error(err);
-        alert(err.message);
+        setDeleteError(err.message);
+        setDeleting(false);
     }
 };
 
@@ -242,11 +241,77 @@ function Account({ token }) {
                 )}
                 {saved && <p className={styles.savedMessage}>✓ Currency preference saved</p>}
             </div>
+            
+            <div className={styles.appearance}>
+    <h1>Appearance</h1>
+    <div className={styles.themeGrid}>
+        <div
+            className={theme === "light" ? styles.themeCardActive : styles.themeCard}
+            onClick={() => setTheme("light")}
+        >
+            <div className={styles.themePreviewLight}>
+                <div className={styles.previewTopRow}>
+                    <div className={styles.previewDot} />
+                    <LuSun size={18} className={styles.previewModeIcon} />
+                </div>
+                <div className={styles.previewLineShort} />
+                <div className={styles.previewLineLong} />
+            </div>
+            <div className={styles.themeCardFooter}>
+                <span>Light</span>
+                {theme === "light" && <LuCheck size={16} />}
+            </div>
+        </div>
 
+        <div
+            className={theme === "dark" ? styles.themeCardActive : styles.themeCard}
+            onClick={() => setTheme("dark")}
+        >
+            <div className={styles.themePreviewDark}>
+                <div className={styles.previewTopRow}>
+                    <div className={styles.previewDot} />
+                    <LuMoon size={18} className={styles.previewModeIcon} />
+                </div>
+                <div className={styles.previewLineShort} />
+                <div className={styles.previewLineLong} />
+            </div>
+            <div className={styles.themeCardFooter}>
+                <span>Dark</span>
+                {theme === "dark" && <LuCheck size={16} />}
+            </div>
+        </div>
+    </div>
+</div>
             <div className={styles.deleteSection}>
                 <h1>Delete Account</h1>
-                <button className={styles.deleteBtn} onClick={handleDeleteAccount}>Delete</button>
+                <button className={styles.deleteBtn} onClick={() => setShowDeleteModal(true)}>Delete</button>
             </div>
+            {showDeleteModal && (
+            <div className={styles.modalOverlay} onClick={() => setShowDeleteModal(false)}>
+                <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                    <div className={styles.modalIcon}>
+                        <LuTriangleAlert size={24} />
+                    </div>
+
+                    <h2>Delete your account?</h2>
+                    <p>
+                        This will permanently delete your account and all associated data.
+                        This action cannot be undone.
+                    </p>
+
+                    {deleteError && <p className={styles.errorMessage}>{deleteError}</p>}
+
+                    <div className={styles.modalActions}>
+                        <button className={styles.cancelBtn} onClick={() => setShowDeleteModal(false)} disabled={deleting}>
+                            Cancel
+                        </button>
+                        <button className={styles.confirmDeleteBtn} onClick={handleDeleteAccount} disabled={deleting}>
+                            {deleting ? 'Deleting...' : 'Yes, delete my account'}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        )}
         </div>
     );
 }
