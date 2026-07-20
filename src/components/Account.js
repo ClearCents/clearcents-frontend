@@ -2,26 +2,15 @@ import styles from './Account.module.css';
 import { LuTriangleAlert, LuDollarSign, LuEuro, LuPoundSterling, LuJapaneseYen, LuIndianRupee, LuLayers, LuWallet, LuMail, LuCheck, LuSun, LuMoon } from "react-icons/lu";
 import { useState, useEffect } from 'react';
 
-const currencyList = ['USD', 'EUR', 'GBP', 'JPY', 'INR'];
 const currencySymbols = { USD: '$', EUR: '€', GBP: '£', JPY: '¥', INR: '₹' };
 
 function Account({ token, theme, setTheme }) {
     const [email, setEmail] = useState("");
     const [createdAt, setCreatedAt] = useState("");
-    const [selectedCurrency, setSelectedCurrency] = useState(0);
     const [subscriptions, setSubscriptions] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [saving, setSaving] = useState(false);
-    const [saved, setSaved] = useState(false);
-
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const [deleteError, setDeleteError] = useState("");
-
-    const chooseCurr = (index) => {
-        setSelectedCurrency(index);
-        setSaved(false);
-    };
 
     // Fetch user's email
     useEffect(() => {
@@ -47,24 +36,6 @@ function Account({ token, theme, setTheme }) {
             .then(res => res.json())
             .then(data => setSubscriptions(Array.isArray(data) ? data : []))
             .catch(err => console.error("Failed to fetch subscriptions:", err));
-    }, [token]);
-
-    // Fetch preferred currency
-    useEffect(() => {
-        if (!token) {
-            setLoading(false);
-            return;
-        }
-        fetch("http://localhost:5000/profile/currency", {
-            headers: { Authorization: `Bearer ${token}` }
-        })
-            .then(res => res.json())
-            .then(data => {
-                const index = currencyList.indexOf(data.preferred_currency);
-                setSelectedCurrency(index !== -1 ? index : 0);
-            })
-            .catch(err => console.error("Failed to fetch currency:", err))
-            .finally(() => setLoading(false));
     }, [token]);
 
     const totalNumber = subscriptions.length;
@@ -99,23 +70,6 @@ function Account({ token, theme, setTheme }) {
 
     return acc;
 }, {});
-
-    const handleSaveCurrency = () => {
-        setSaving(true);
-        setSaved(false);
-        fetch('http://localhost:5000/profile/currency', {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ currency: currencyList[selectedCurrency] })
-        })
-            .then(res => res.json())
-            .then(() => setSaved(true))
-            .catch(() => console.error('Failed to save currency'))
-            .finally(() => setSaving(false));
-    };
 
     const handleDeleteAccount = async () => {
     setDeleting(true);
@@ -212,40 +166,11 @@ function Account({ token, theme, setTheme }) {
         </div>
                 </div>
             </div>
-
-            <div className={styles.currency}>
-                <h1>Preferred Currency</h1>
-                {loading ? (
-                    <p>Loading...</p>
-                ) : (
-                    <div className={styles.chooseCurrency}>
-                        <div className={selectedCurrency === 0 ? styles.chosenDiv : styles.currencyDiv} onClick={() => chooseCurr(0)}>
-                            <LuDollarSign size={18} />
-                        </div>
-                        <div className={selectedCurrency === 1 ? styles.chosenDiv : styles.currencyDiv} onClick={() => chooseCurr(1)}>
-                            <LuEuro size={18} />
-                        </div>
-                        <div className={selectedCurrency === 2 ? styles.chosenDiv : styles.currencyDiv} onClick={() => chooseCurr(2)}>
-                            <LuPoundSterling size={18} />
-                        </div>
-                        <div className={selectedCurrency === 3 ? styles.chosenDiv : styles.currencyDiv} onClick={() => chooseCurr(3)}>
-                            <LuJapaneseYen size={18} />
-                        </div>
-                        <div className={selectedCurrency === 4 ? styles.chosenDiv : styles.currencyDiv} onClick={() => chooseCurr(4)}>
-                            <LuIndianRupee size={18} />
-                        </div>
-                        <button onClick={handleSaveCurrency} disabled={saving}>
-                            {saving ? 'Saving...' : 'Save'}
-                        </button>
-                    </div>
-                )}
-                {saved && <p className={styles.savedMessage}>✓ Currency preference saved</p>}
-            </div>
             
             <div className={styles.appearance}>
-    <h1>Appearance</h1>
-    <div className={styles.themeGrid}>
-        <div
+        <h1>Appearance</h1>
+        <div className={styles.themeGrid}>
+            <div
             className={theme === "light" ? styles.themeCardActive : styles.themeCard}
             onClick={() => setTheme("light")}
         >

@@ -56,81 +56,6 @@
   margin-bottom: 0;
 }
 
-.currency {
-  display: flex;
-  flex-direction: column;
-}
-
-.currency h1 {
-  margin-bottom: 15px;
-}
-
-.chooseCurrency {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.currencyDiv {
-  width: 52px;
-  height: 52px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  border: 1.5px solid var(--border-color);
-  border-radius: 8px;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.currencyDiv:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.chosenDiv {
-  width: 52px;
-  height: 52px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  border: 1.5px solid var(--accent);
-  border-radius: 8px;
-  background: var(--accent);
-  color: white;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.currencyLabel {
-  font-size: 9px;
-  font-weight: 600;
-}
-
-.chooseCurrency button {
-  margin-left: auto;
-  padding: 10px 24px;
-  background: var(--button-solid-bg);
-  color: var(--button-solid-text);
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.15s ease;
-}
-
-.chooseCurrency button:hover {
-  background: var(--accent);
-  color: white;
-}
-
 .statsRow {
   display: flex;
   gap: 16px;
@@ -199,13 +124,6 @@
   font-size: 20px;
   font-weight: 700;
   flex-shrink: 0;
-}
-
-.savedMessage {
-  color: #16a34a;
-  font-size: 13px;
-  margin-top: 10px;
-  font-weight: 500;
 }
 
 /* Appearance section */

@@ -7,38 +7,53 @@
 }
 
 :root {
+  color-scheme: light;
   --bg-primary: #ffffff;
-  --bg-secondary: #f9f9fb;
-  --bg-hover: #fafafa;
-  --text-primary: #1a1a2e;
-  --text-secondary: #666;
-  --text-muted: #888;
-  --border-color: #eee;
-  --accent: #7c3aed;
-  --accent-hover: #6d28d9;
-  --card-shadow: 0 2px 10px rgba(0,0,0,0.08);
-  --page-bg: #f5f5f5;
+  --bg-secondary: #f7f7f9;
+  --bg-hover: #f1f1f4;
+  --text-primary: #18181f;
+  --text-secondary: #62626e;
+  --text-muted: #8f8f9a;
+  --border-color: #e4e4e9;
+  --accent: #6d5ce6;
+  --accent-hover: #5b4bd1;
+  --button-solid-bg: #18181f;
+  --button-solid-text: #ffffff;
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.06),
+                 0 1px 2px rgba(0, 0, 0, 0.04);
+  --page-bg: #f4f4f7;
 }
 
 [data-theme="dark"] {
-  --bg-primary: #1e1e2f;
-  --bg-secondary: #24243e;
-  --bg-hover: #2a2a45;
-  --text-primary: #f0f0f5;
-  --text-secondary: #b0b0c0;
-  --text-muted: #8888a0;
-  --border-color: #3a3a55;
-  --accent: #a78bfa;
-  --accent-hover: #c4b5fd;
-  --card-shadow: 0 2px 10px rgba(0,0,0,0.4);
-  --page-bg: #12121e;
+  color-scheme: dark;
+  --bg-primary: #1a1a24;
+  --bg-secondary: #22222e;
+  --bg-hover: #292937;
+  --text-primary: #edeef2;
+  --text-secondary: #a4a4b2;
+  --text-muted: #77778a;
+  --border-color: #33333f;
+  --accent: #8b7cf0;
+  --accent-hover: #a294f5;
+  --button-solid-bg: #edeef2;
+  --button-solid-text: #18181f;
+  --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --page-bg: #131319;
 }
 
 body {
+  margin: 0;
   font-family: 'Inter', sans-serif;
   background-color: var(--page-bg);
   color: var(--text-primary);
   transition: background 0.2s ease, color 0.2s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }
 
 .App {
@@ -49,6 +64,10 @@ body {
 
 .content {
   flex: 1;
+  width: 100%;
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
 }
 
 .navbar {
@@ -57,7 +76,7 @@ body {
   justify-content: space-between;
   padding: 20px 60px;
   background: var(--bg-primary);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -68,6 +87,11 @@ body {
   font-weight: 800;
   color: var(--accent);
   letter-spacing: -0.5px;
+  text-decoration: none;
+}
+
+.nav-brand-link {
+  text-decoration: none;
 }
 
 .nav-tabs {
@@ -76,16 +100,16 @@ body {
 }
 
 .tab {
+  display: inline-block;
   padding: 10px 24px;
   border: none;
+  border-radius: 6px;
   background: var(--bg-primary);
   color: var(--text-secondary);
   font-size: 16px;
-  cursor: pointer;
-  border-radius: 6px;
   font-weight: 500;
   text-decoration: none;
-  display: inline-block;
+  cursor: pointer;
 }
 
 .tab:hover {
@@ -95,19 +119,17 @@ body {
 .tab.active {
   background: var(--border-color);
   color: var(--text-secondary);
-  font-weight: 500;
-  font-size: 16px;
 }
 
 .signout-btn {
   padding: 8px 20px;
   background: transparent;
   border: 1.5px solid var(--border-color);
-  color: var(--text-secondary);
   border-radius: 8px;
-  cursor: pointer;
+  color: var(--text-secondary);
   font-size: 14px;
   font-weight: 500;
+  cursor: pointer;
 }
 
 .signout-btn:hover {
@@ -115,18 +137,10 @@ body {
   color: var(--accent);
 }
 
-.content {
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 0 20px;
-  flex: 1;
-  width: 100%;
-}
-
 .footer {
-  text-align: center;
-  padding: 30px 20px;
   margin-top: 60px;
+  padding: 30px 20px;
+  text-align: center;
   border-top: 1px solid var(--border-color);
   background: var(--bg-primary);
 }
@@ -173,39 +187,9 @@ body {
   position: relative;
 }
 
-.nav-brand-link {
-  text-decoration: none;
-}
-
-.nav-brand {
-  text-decoration: none;
-}
-
 .auth-wrapper {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-:root {
-  /* ...existing variables... */
-  --button-solid-bg: #1a1a2e;
-  --button-solid-text: #ffffff;
-}
-
-[data-theme="dark"] {
-  /* ...existing variables... */
-  --button-solid-bg: #f0f0f5;
-  --button-solid-text: #1a1a2e;
-}
-
-:root {
-  color-scheme: light;
-  /* ...your existing variables... */
-}
-
-[data-theme="dark"] {
-  color-scheme: dark;
-  /* ...your existing variables... */
 }
