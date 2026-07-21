@@ -40,7 +40,7 @@ function AppContent() {
 
   return (
     <div className="App">
-      {token ? (
+      {token && location.pathname !== '/landing' ? (
         <nav className="navbar">
           <NavLink to="/landing" className="nav-brand">ClearCents</NavLink>
           <div className="nav-tabs">
@@ -59,7 +59,7 @@ function AppContent() {
       ) : (
         isAuthPage && (
           <nav className="navbar">
-            <NavLink to="/signin" className="nav-brand-link">
+            <NavLink to="/landing" className="nav-brand-link">
               <div className="nav-brand">ClearCents</div>
             </NavLink>
             <div className="nav-tabs">
