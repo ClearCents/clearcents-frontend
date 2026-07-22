@@ -23,7 +23,7 @@ function Account({ token, theme, setTheme }) {
     // Fetch user's email
     useEffect(() => {
         if (!token) return;
-        fetch("http://localhost:5000/auth/me", {
+        fetch("https://clearcents-backend-production.up.railway.app/auth/me", {
             headers: { Authorization: `Bearer ${token}` }
         })
             .then(res => res.json())
@@ -38,7 +38,7 @@ function Account({ token, theme, setTheme }) {
     // Fetch subscriptions
     useEffect(() => {
         if (!token) return;
-        fetch("http://localhost:5000/subscriptions", {
+        fetch("https://clearcents-backend-production.up.railway.app/subscriptions", {
             headers: { Authorization: `Bearer ${token}` }
         })
             .then(res => res.json())
@@ -128,7 +128,7 @@ function Account({ token, theme, setTheme }) {
 
     setChangingPassword(true);
 
-    fetch("http://localhost:5000/auth/change-password", {
+    fetch("https://clearcents-backend-production.up.railway.app/auth/change-password", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

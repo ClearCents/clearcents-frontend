@@ -20,7 +20,7 @@ function Signin({ onSignin }) {
     return;
   }
     setError('');
-    fetch('http://localhost:5000/auth/signin', {
+    fetch('https://clearcents-backend-production.up.railway.app/auth/signin', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })

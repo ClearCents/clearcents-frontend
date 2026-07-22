@@ -62,7 +62,7 @@ function Signup({ onSignup }) {
     setError('');
     setVerifying(true);
 
-    fetch('http://localhost:5000/auth/verify-signup', {
+    fetch('https://clearcents-backend-production.up.railway.app/auth/verify-signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, token: code.trim() })
@@ -85,7 +85,7 @@ function Signup({ onSignup }) {
   const handleResend = () => {
     setResending(true);
     setResendMessage('');
-    fetch('http://localhost:5000/auth/resend-code', {
+    fetch('https://clearcents-backend-production.up.railway.app/auth/resend-code', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email })

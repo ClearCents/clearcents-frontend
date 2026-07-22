@@ -57,7 +57,7 @@ function Dashboard({ token }) {
   }, [token]);
 
   const handleAdd = () => {
-    fetch('http://localhost:5000/subscriptions', {
+    fetch('https://clearcents-backend-production.up.railway.app/subscriptions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
