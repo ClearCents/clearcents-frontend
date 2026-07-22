@@ -36,7 +36,7 @@ function Signup({ onSignup }) {
     }
     setError('');
 
-    fetch('https://clearcents-backend-production.up.railway.app/auth/signup', {
+    fetch('https://clearcents-backend.onrender.com/auth/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -62,7 +62,7 @@ function Signup({ onSignup }) {
     setError('');
     setVerifying(true);
 
-    fetch('https://clearcents-backend-production.up.railway.app/auth/verify-signup', {
+    fetch('https://clearcents-backend.onrender.com/auth/verify-signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, token: code.trim() })
@@ -85,7 +85,7 @@ function Signup({ onSignup }) {
   const handleResend = () => {
     setResending(true);
     setResendMessage('');
-    fetch('https://clearcents-backend-production.up.railway.app/auth/resend-code', {
+    fetch('https://clearcents-backend.onrender.com/auth/resend-code', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email })

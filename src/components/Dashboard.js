@@ -29,7 +29,7 @@ function Dashboard({ token }) {
   };
 
   useEffect(() => {
-    fetch('https://clearcents-backend-production.up.railway.app/subscriptions', {
+    fetch('https://clearcents-backend.onrender.com/subscriptions', {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -57,7 +57,7 @@ function Dashboard({ token }) {
   }, [token]);
 
   const handleAdd = () => {
-    fetch('https://clearcents-backend-production.up.railway.app/subscriptions', {
+    fetch('https://clearcents-backend.onrender.com/subscriptions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ function Dashboard({ token }) {
   };
 
   const handleDelete = (id) => {
-    fetch(`https://clearcents-backend-production.up.railway.app/subscriptions/${id}`, {
+    fetch(`https://clearcents-backend.onrender.com/subscriptions/${id}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`

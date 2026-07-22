@@ -23,7 +23,7 @@ function Account({ token, theme, setTheme }) {
     // Fetch user's email
     useEffect(() => {
         if (!token) return;
-        fetch("https://clearcents-backend-production.up.railway.app/auth/me", {
+        fetch("https://clearcents-backend.onrender.com/auth/me", {
             headers: { Authorization: `Bearer ${token}` }
         })
             .then(res => res.json())
@@ -38,7 +38,7 @@ function Account({ token, theme, setTheme }) {
     // Fetch subscriptions
     useEffect(() => {
         if (!token) return;
-        fetch("https://clearcents-backend-production.up.railway.app/subscriptions", {
+        fetch("https://clearcents-backend.onrender.com/subscriptions", {
             headers: { Authorization: `Bearer ${token}` }
         })
             .then(res => res.json())
@@ -84,7 +84,7 @@ function Account({ token, theme, setTheme }) {
     setDeleteError("");
 
     try {
-         const res = await fetch("https://clearcents-backend-production.up.railway.app/auth/delete-account", {
+         const res = await fetch("https://clearcents-backend.onrender.com/auth/delete-account", {
             method: "DELETE",
             headers: {
                 Authorization: `Bearer ${token}`
@@ -128,7 +128,7 @@ function Account({ token, theme, setTheme }) {
 
     setChangingPassword(true);
 
-    fetch("https://clearcents-backend-production.up.railway.app/auth/change-password", {
+    fetch("https://clearcents-backend.onrender.com/auth/change-password", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
