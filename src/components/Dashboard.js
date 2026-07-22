@@ -22,13 +22,14 @@ function Dashboard({ token }) {
 
   const [showForm, setShowForm] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState(0);
+  const [sortBy, setSortBy] = useState("custom");
 
   const chooseCurr = (index) => {
     setSelectedCurrency(index);
   };
 
   useEffect(() => {
-    fetch('http://localhost:5000/subscriptions', {
+    fetch('https://clearcents-backend-production.up.railway.app/subscriptions', {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -88,7 +89,7 @@ function Dashboard({ token }) {
   };
 
   const handleDelete = (id) => {
-    fetch(`http://localhost:5000/subscriptions/${id}`, {
+    fetch(`https://clearcents-backend-production.up.railway.app/subscriptions/${id}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`
@@ -125,24 +126,61 @@ function Dashboard({ token }) {
     return 'Weekly';
   };
 
+  const sortedSubscriptions = [...subscriptions].sort((a, b) => {
+  switch (sortBy) {
+    case "costLow":
+      return a.price - b.price;
+
+    case "costHigh":
+      return b.price - a.price;
+
+    case "startDate":
+      return new Date(a.start_date) - new Date(b.start_date);
+
+    case "nextRenewal":
+      return (
+        getDaysUntilRenewal(a.start_date, a.billing_cycle) -
+        getDaysUntilRenewal(b.start_date, b.billing_cycle)
+      );
+
+    case "custom":
+    default:
+      return a.id - b.id; // assumes ids increase as subscriptions are added
+  }
+});
+
     return (
     <>
       <div className={styles.dashboard}>
         <div className={styles.dashboardHeader}>
-          <div>
-            <h2>My Subscriptions</h2>
-            <p className={styles.subtitle}>
-              {subscriptions.length} subscription{subscriptions.length !== 1 ? 's' : ''}
-            </p>
-          </div>
+  <div>
+    <h2>My Subscriptions</h2>
+    <p className={styles.subtitle}>
+      {subscriptions.length} subscription{subscriptions.length !== 1 ? "s" : ""}
+    </p>
+  </div>
 
-          <button
-            className={styles.addIconBtn}
-            onClick={() => setShowForm(true)}
-          >
-            +
-          </button>
-        </div>
+  <div className={styles.headerActions}>
+    <select
+      value={sortBy}
+      onChange={(e) => setSortBy(e.target.value)}
+      className={styles.sortSelect}
+    >
+      <option value="custom">Custom Order</option>
+      <option value="nextRenewal">Next Bill Due</option>
+      <option value="costLow">Lowest Cost</option>
+      <option value="costHigh">Highest Cost</option>
+      <option value="startDate">Start Date</option>
+    </select>
+
+    <button
+      className={styles.addIconBtn}
+      onClick={() => setShowForm(true)}
+    >
+      +
+    </button>
+  </div>
+</div>
 
         {loading ? (
           <p>Loading...</p>
@@ -152,7 +190,7 @@ function Dashboard({ token }) {
             <p>Click the + button to add your first subscription.</p>
           </div>
         ) : (<div className={styles.subscriptionList}>
-  {subscriptions.map((sub) => (
+  {sortedSubscriptions.map((sub) => (
     <div key={sub.id} className={styles.subscriptionRow}>
 
       <div className={styles.subscriptionInfo}>

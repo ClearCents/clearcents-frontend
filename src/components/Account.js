@@ -1,5 +1,5 @@
 import styles from './Account.module.css';
-import { LuTriangleAlert, LuDollarSign, LuEuro, LuPoundSterling, LuJapaneseYen, LuIndianRupee, LuLayers, LuWallet, LuMail, LuCheck, LuSun, LuMoon } from "react-icons/lu";
+import { LuTriangleAlert, LuLayers, LuWallet, LuMail, LuCheck, LuSun, LuMoon, LuChevronRight } from "react-icons/lu";
 import { useState, useEffect } from 'react';
 
 const currencySymbols = { USD: '$', EUR: '€', GBP: '£', JPY: '¥', INR: '₹' };
@@ -11,6 +11,14 @@ function Account({ token, theme, setTheme }) {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const [deleteError, setDeleteError] = useState("");
+    const [showPasswordForm, setShowPasswordForm] = useState(false);
+
+    const [currentPassword, setCurrentPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmNewPassword, setConfirmNewPassword] = useState("");
+    const [changingPassword, setChangingPassword] = useState(false);
+    const [passwordError, setPasswordError] = useState("");
+    const [passwordSuccess, setPasswordSuccess] = useState("");
 
     // Fetch user's email
     useEffect(() => {
@@ -76,7 +84,7 @@ function Account({ token, theme, setTheme }) {
     setDeleteError("");
 
     try {
-        const res = await fetch("http://localhost:5000/auth/delete-account", {
+         const res = await fetch("https://clearcents-backend-production.up.railway.app/auth/delete-account", {
             method: "DELETE",
             headers: {
                 Authorization: `Bearer ${token}`
@@ -101,6 +109,48 @@ function Account({ token, theme, setTheme }) {
     }
 };
 
+    const handleChangePassword = () => {
+    setPasswordError("");
+    setPasswordSuccess("");
+
+    if (!currentPassword || !newPassword || !confirmNewPassword) {
+        setPasswordError("Please fill in all password fields.");
+        return;
+    }
+    if (newPassword.length < 8) {
+        setPasswordError("New password must be at least 8 characters long.");
+        return;
+    }
+    if (newPassword !== confirmNewPassword) {
+        setPasswordError("New passwords do not match.");
+        return;
+    }
+
+    setChangingPassword(true);
+
+    fetch("http://localhost:5000/auth/change-password", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ currentPassword, newPassword })
+    })
+        .then(res => res.json().then(data => ({ ok: res.ok, data })))
+        .then(({ ok, data }) => {
+            if (ok) {
+                localStorage.removeItem("token");
+                alert("Password updated successfully. Please sign in again with your new password.");
+                window.location.href = "/signin";
+            } else {
+                setPasswordError(data?.error || "Failed to update password.");
+            }
+        })
+        .catch(() => {
+            setPasswordError("Something went wrong. Please try again.");
+        })
+        .finally(() => setChangingPassword(false));
+};
     return (
         <div className={styles.accountContainer}>
             <div className={styles.email}>
@@ -207,6 +257,53 @@ function Account({ token, theme, setTheme }) {
         </div>
     </div>
 </div>
+
+            <div className={styles.passwordSection}>
+                <div className={styles.passwordHeader} onClick={() => setShowPasswordForm(prev => !prev)}>
+                    <h1>Change Password</h1>
+                    <LuChevronRight
+                        size={18}
+                        className={showPasswordForm ? styles.chevronOpen : styles.chevron}
+                    />
+                </div>
+
+                {showPasswordForm && (
+                    <div className={styles.passwordForm}>
+                        <input
+                            type="password"
+                            placeholder="Current password"
+                            value={currentPassword}
+                            onChange={e => setCurrentPassword(e.target.value)}
+                            className={styles.passwordInput}
+                            autoComplete="current-password"
+                        />
+                        <div className={styles.passwordRow}>
+                            <input
+                                type="password"
+                                placeholder="New password"
+                                value={newPassword}
+                                onChange={e => setNewPassword(e.target.value)}
+                                className={styles.passwordInput}
+                                autoComplete="new-password"
+                            />
+                            <input
+                                type="password"
+                                placeholder="Confirm new password"
+                                value={confirmNewPassword}
+                                onChange={e => setConfirmNewPassword(e.target.value)}
+                                className={styles.passwordInput}
+                                autoComplete="new-password"
+                            />
+                            <button onClick={handleChangePassword} disabled={changingPassword} className={styles.passwordBtn}>
+                                {changingPassword ? 'Updating...' : 'Update'}
+                            </button>
+                        </div>
+                        {passwordError && <p className={styles.errorMessage}>{passwordError}</p>}
+                        {passwordSuccess && <p className={styles.successMessage}>{passwordSuccess}</p>}
+                    </div>
+                )}
+            </div>
+
             <div className={styles.deleteSection}>
                 <h1>Delete Account</h1>
                 <button className={styles.deleteBtn} onClick={() => setShowDeleteModal(true)}>Delete</button>
