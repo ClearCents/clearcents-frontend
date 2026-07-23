@@ -171,6 +171,20 @@ function Account({ token, theme, setTheme }) {
                 </div>
             </div>
 
+            <div className={styles.email}>
+                <button
+                    className={styles.passwordBtn}
+                    onClick={() => {
+                        const backendUrl = window.location.hostname === "localhost"
+                            ? "http://localhost:5000"
+                            : "https://clearcents-backend.onrender.com";
+                        window.location.href = `${backendUrl}/auth/gmail/connect?token=${token}`;
+                    }}
+                >
+                    <LuMail size={16} /> Connect Gmail
+                </button>
+            </div>
+
             <div className={styles.subscriptions}>
                 <h1>Subscriptions</h1>
                 <div className={styles.statsRow}>
